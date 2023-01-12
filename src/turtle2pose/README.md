@@ -1,0 +1,2 @@
+实验2:编写服务控制小乌龟到达指定的位置
+roslaunch turtle2pose turtle2pose.launch

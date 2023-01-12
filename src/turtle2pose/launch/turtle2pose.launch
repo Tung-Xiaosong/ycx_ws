@@ -1,0 +1,13 @@
+<launch>
+
+<!--打开turtlesim_node节点，生成小乌龟-->
+<node pkg="turtlesim" type="turtlesim_node" name="turtlesim" output="screen"/>
+
+<!--自己编写的控制乌龟运动位置服务器节点-->
+<node pkg="turtle2pose" type="pose_server_node" name="pose_server_node" output="screen"/>
+
+<!--客户端节点启动-->
+<node pkg="turtle2pose" type="pose_client_node" name="pose_client_node" output="screen"/>
+
+</launch>
+

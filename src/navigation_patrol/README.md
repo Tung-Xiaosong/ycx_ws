@@ -1,0 +1,4 @@
+roslaunch navigation_patrol navigation_patrol.launch打开bobac2仿真,运行navigation_patrol_ac节点
+rosservice call /patrol_nav巡航
+rosservice call /set_goals调用服务设置巡航目标点
+rosservice call /cancel_nav调用服务取消巡航

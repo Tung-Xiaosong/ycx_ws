@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+<!--打开fox_base节点-->
+<node pkg="fox_base" type="fox_base_node" name="fox_base_node"/>
+<!--打开fox_kinematics运动学节点-->
+<node pkg="two_dif_car" type="fox_kinematics_node" name="fox_kinematics_node"/>
+<!--打开odometry里程计节点-->
+<node pkg="two_dif_car" type="odometry_node" name="odometry_node"/>
+
+</launch>

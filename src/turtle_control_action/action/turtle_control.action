@@ -1,0 +1,6 @@
+int32 times
+Path m_path
+---
+int32 point_count
+---
+Point current_point

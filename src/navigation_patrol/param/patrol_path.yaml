@@ -1,0 +1,74 @@
+loop: 2
+path_num: 7
+pose1:
+  position:
+    x: 2
+    y: -2.5
+    z: 0
+  orientation:
+    x: 0
+    y: 0
+    z: 1
+    w: 0
+pose2:
+  position:
+    x: 2.7
+    y: 1
+    z: 0
+  orientation:
+    x: 0
+    y: 0
+    z: 1
+    w: 0
+pose3:
+  position:
+    x: 2.5
+    y: 4
+    z: 0
+  orientation:
+    x: 0
+    y: 0
+    z: 1
+    w: 0
+pose4:
+  position:
+    x: -2
+    y: 4
+    z: 0
+  orientation:
+    x: 0
+    y: 0
+    z: 1
+    w: 0
+pose5:
+  position:
+    x: -3
+    y: -3.5
+    z: 0
+  orientation:
+    x: 0
+    y: 0
+    z: 1
+    w: 0
+pose6:
+  position:
+    x: -5.2
+    y: -3
+    z: 0
+  orientation:
+    x: 0
+    y: 0
+    z: 1
+    w: 0
+pose7:
+  position:
+    x: 0
+    y: 0
+    z: 0
+  orientation:
+    x: 0
+    y: 0
+    z: -1
+    w: 0
+
+

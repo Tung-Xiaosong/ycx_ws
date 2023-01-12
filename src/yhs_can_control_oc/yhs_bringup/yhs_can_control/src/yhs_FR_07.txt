@@ -1,0 +1,155 @@
+#include <fcntl.h>
+#include <dirent.h>
+#include <linux/input.h>
+#include <sys/stat.h>
+#include <pthread.h>
+#include <time.h>
+
+
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
+
+
+#include "yhs_can_control.h"
+
+class YHSmotor
+{
+private:
+  ros::NodeHandle n;
+  //ros::Publisher sendTopic_Speed;//创建发布者
+  ros::Subscriber ctrl_cmd_sub_;
+  //ros::Subscriber receiveTopic_Speed;//创建接收者src/yhs_can_control_oc/yhs_dgt001m_oc/yhs_bringup/yhs_can_control/src/yhs_FR_07.cpp
+  //VCI_CAN_OBJ  Data[2];//Data[2]表示一个帧的数据结构--结构体。左右电机
+  //VCI_INIT_CONFIG Can_Config;//初始化CAN的配置,初始化之前，要先填好这个结构体变量。
+  //uint16_t node_adress;
+  ros::Rate rate;
+  //uint callNum;
+  //can_control::Speed speed_value;
+  //convert trans;
+  //bool receive_flag;
+public:
+  //bool Flag;
+  YHSmotor();  //构造函数
+  ~YHSmotor();
+  //void Execute();
+  //void Init();
+  //void Clearn_Struct();
+  //void Speed_Callback(const can_control::SpeedConstPtr & speed);
+  //void Enable_Callback(const can_control::EnableConstPtr & enable);
+  void ctrl_cmdCallBack(const yhs_can_msgs::ctrl_cmd msg);
+};
+
+//速度控制回调函数
+void YHSmotor::ctrl_cmdCallBack(const yhs_can_msgs::ctrl_cmd msg)
+{
+	unsigned short vel = 0;
+	short angular = msg.ctrl_cmd_steering * 100;
+	static unsigned char count = 0;
+	unsigned char sendData_u_vel[8];
+
+	//cmd_mutex_.lock();
+
+	memset(sendData_u_vel,0,8);
+
+	if(msg.ctrl_cmd_velocity < 0) vel = 0;
+	else
+	{
+		vel = msg.ctrl_cmd_velocity * 1000;
+	}
+
+	sendData_u_vel[0] = sendData_u_vel[0] | (0x0f & msg.ctrl_cmd_gear);
+	
+	sendData_u_vel[0] = sendData_u_vel[0] | (0xf0 & ((vel & 0x0f) << 4));
+
+	sendData_u_vel[1] = (vel >> 4) & 0xff;
+
+	sendData_u_vel[2] = sendData_u_vel[2] | (0x0f & (vel >> 12));
+
+	sendData_u_vel[2] = sendData_u_vel[2] | (0xf0 & ((angular & 0x0f) << 4));
+
+	sendData_u_vel[3] = (angular >> 4) & 0xff;
+
+	sendData_u_vel[4] = sendData_u_vel[4] | (0xf0 & ((msg.ctrl_cmd_Brake & 0x0f) << 4));
+
+	sendData_u_vel[4] = sendData_u_vel[4] | (0x0f & (angular >> 12));
+
+	sendData_u_vel[5] = 0;
+
+	count ++;
+
+	if(count == 16)	count = 0;
+
+	sendData_u_vel[6] =  count << 4;
+	
+
+	sendData_u_vel[7] = sendData_u_vel[0] ^ sendData_u_vel[1] ^ sendData_u_vel[2] ^ sendData_u_vel[3] ^ sendData_u_vel[4] ^ sendData_u_vel[5] ^ sendData_u_vel[6];
+
+	//send_frames_[0].can_id = 0x98C4D2D0;
+    //send_frames_[0].can_dlc = 8;
+
+	memcpy(send_frames_[0].data, sendData_u_vel, 8);
+/* 
+	int ret = write(dev_handler_, &send_frames_[0], sizeof(send_frames_[0]));
+    if (ret <= 0) 
+	{
+      ROS_ERROR("send message failed, error code: %d",ret);
+    }	
+ */
+	//cmd_mutex_.unlock();
+}
+
+YHSmotor::YHSmotor()/* :rate(100)  */ //构造函数
+{
+	ctrl_cmd_sub_ = nh_.subscribe<yhs_can_msgs::ctrl_cmd>("ctrl_cmd", 5, &CanControl::ctrl_cmdCallBack, this);
+        
+        //打开设备
+	dev_handler_ = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+	if (dev_handler_ < 0) 
+	{
+		ROS_ERROR(">>open can deivce error!");
+		return;
+	}
+        else
+	{
+		ROS_INFO(">>open can deivce success!");
+	}
+
+
+	struct ifreq ifr;
+	
+	std::string can_name("can0");
+
+	strcpy(ifr.ifr_name,can_name.c_str());
+
+	ioctl(dev_handler_,SIOCGIFINDEX, &ifr);
+
+
+    // bind socket to network interface
+	struct sockaddr_can addr;
+	memset(&addr, 0, sizeof(addr));
+	addr.can_family = AF_CAN;
+	addr.can_ifindex = ifr.ifr_ifindex;
+	int ret = ::bind(dev_handler_, reinterpret_cast<struct sockaddr *>(&addr),sizeof(addr));
+	if (ret < 0) 
+	{
+		ROS_ERROR(">>bind dev_handler error!\r\n");
+		return;
+	}
+
+	boost::thread recvdata_thread(boost::bind(&CanControl::recvData, this));
+
+	ros::spin();
+	
+	close(dev_handler_);
+}
+
+int main(int argc, char ** argv)
+{
+        ros::init(argc,argv,"yhs_FR_07_node");
+        YHSmotor yhsmotor;
+        //yhsmotor.init();
+        /* if(motor.Flag)
+          return 0;
+        motor.Execute(); */
+        return 0;   
+}

@@ -1,0 +1,21 @@
+<launch>
+
+<!--打开小乌龟节点-->
+<node pkg="turtlesim" type="turtlesim_node" name="turtlesim_node"/>
+
+<!--打开小乌龟键盘控制节点-->
+<node pkg="turtlesim" type="turtle_teleop_key" name="turtle_teleop_key" output="screen"/>
+ 
+<!--打开turtle_tftree_node节点创建turtle1和word之间的tf关系-->
+<node pkg="turtle_triangle" type="turtle_tftree_node" args="/turtle1" name="turtle1_tftree_node"/>
+<!--打开turtle_tftree_node节点创建turtle2和word之间的tf关系-->
+<node pkg="turtle_triangle" type="turtle_tftree_node" args="/turtle2" name="turtle2_tftree_node"/>
+<!--打开turtle_tftree_node节点创建turtle3和word之间的tf关系-->
+<node pkg="turtle_triangle" type="turtle_tftree_node" args="/turtle3" name="turtle3_tftree_node"/>
+
+<!--打开turtle_formation_node节点创建carrot1和turtle1之间的tf关系-->
+<node pkg="turtle_triangle" type="turtle_formation_node" name="turtle_formation_node"/>
+
+<node pkg="turtle_triangle" type="turtle_traing_node" name="turtle_traing_node"/>
+
+</launch>

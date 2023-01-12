@@ -1,0 +1,13 @@
+path_num: 3
+pose1:
+  ctrl_cmd_gear: 4
+  ctrl_cmd_velocity: 0.0
+  ctrl_cmd_steering: 15
+pose2:
+  ctrl_cmd_gear: 4
+  ctrl_cmd_velocity: 0.0
+  ctrl_cmd_steering: 5
+pose3:
+  ctrl_cmd_gear: 4
+  ctrl_cmd_velocity: 0.0
+  ctrl_cmd_steering: -15

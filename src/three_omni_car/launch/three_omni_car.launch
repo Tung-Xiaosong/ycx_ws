@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+<!--打开fox_base节点-->
+<node pkg="fox_base" type="fox_base_node" name="fox_base_node"/>
+<!--打开three_fox_kinematics运动学节点-->
+<node pkg="three_omni_car" type="three_omni_car_node" name="three_omni_car_node"/>
+<!--打开odometry里程计节点-->
+<node pkg="three_omni_car" type="three_odometry_node" name="three_odometry_node"/>
+
+</launch>

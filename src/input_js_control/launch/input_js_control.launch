@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="turtlesim" type="turtlesim_node" name="turtlesim_node">
+    </node>
+    <node pkg="input_js_control" type="logitech" name="joy_to_turtle" output="screen"> 
+    </node>
+    <!--input axis -->
+       <param name="axis_linear" value="4" type="int"/>
+       <param name="axis_angular" value="3" type="int"/>
+       <!--input vel -->
+ 
+       <param name="vel_linear" value="2" type="double"/>
+       <param name="vel_angular" value="1.5" type="double"/>
+ 
+    <node  respawn="true" pkg="joy" type="joy_node" name="joystick" >  
+    </node>
+    
+</launch>

@@ -1,0 +1,5 @@
+<library path="lib/libcal_add">
+  <class type="sim_add::Add" base_class_type="my_simulator::Calculator">
+    <description>This is a add plugin.</description>
+  </class>
+</library>

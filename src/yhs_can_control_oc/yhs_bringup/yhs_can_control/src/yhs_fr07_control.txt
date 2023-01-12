@@ -1,0 +1,74 @@
+#include <fcntl.h>
+#include <dirent.h>
+#include <linux/input.h>
+#include <sys/stat.h>
+#include <pthread.h>
+#include <time.h>
+
+
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
+
+
+//#include "yhs_can_control/yhs_can_control.h"
+#include "yhs_can_control.h"
+
+#include <ros/ros.h>
+#include <iostream>
+
+int num=0;
+void ctrl_fbCallBack(const yhs_can_msgs::ctrl_fb ctrl_fb_msg)
+{
+    ROS_INFO("The velocity is %.2f \nThe angular is %.2f \nThe gear is %d \nThe brake is %d\n",
+    ctrl_fb_msg.ctrl_fb_velocity, ctrl_fb_msg.ctrl_fb_steering, ctrl_fb_msg.ctrl_fb_gear, ctrl_fb_msg.ctrl_fb_Brake);
+    ROS_INFO("----------");
+}
+
+int main(int argc, char ** argv)
+{
+	ros::init(argc, argv, "yhs_fr07_control_node");
+    ros::NodeHandle n;
+    ros::Publisher pub = n.advertise<yhs_can_msgs::ctrl_cmd>("ctrl_cmd",1);
+    ros::Subscriber sub=n.subscribe<yhs_can_msgs::ctrl_fb>("ctrl_fb",20, &ctrl_fbCallBack);
+    yhs_can_msgs::ctrl_cmd ctrl_cmd_msg;
+    /* while (ros::ok)
+    { */
+    /* sleep(2);
+    ctrl_cmd_msg.ctrl_cmd_gear=4;
+    ctrl_cmd_msg.ctrl_cmd_steering=10;
+    pub.publish(ctrl_cmd_msg);
+    sleep(2);//前进1s
+    ros::spinOnce();
+
+    sleep(2);
+    ctrl_cmd_msg.ctrl_cmd_steering=-10;
+    pub.publish(ctrl_cmd_msg);
+    sleep(2);//前进1s
+    ros::spinOnce();    
+    */
+    /* n.getParam("path_num",num);
+    for(int i=0;i<=num;i++)
+    {
+        //n.getParam("pose"+std::to_string(i)+"/ctrl_cmd_gear",ctrl_cmd_msg.ctrl_cmd_gear);
+        //n.getParam(std::to_string(i)+"/ctrl_cmd_gear",ctrl_cmd_msg.ctrl_cmd_gear);
+        n.getParam("pose"+std::to_string(i)+"/ctrl_cmd_velocity",ctrl_cmd_msg.ctrl_cmd_velocity);
+        n.getParam("pose"+std::to_string(i)+"/ctrl_cmd_steering",ctrl_cmd_msg.ctrl_cmd_steering);
+        pub.publish(ctrl_cmd_msg);
+        sleep(3);
+    } */
+    //ros::spinOnce();   
+    //sleep(3);
+    //ctrl_cmd_msg.ctrl_cmd_gear=4;
+    ctrl_cmd_msg.ctrl_cmd_steering=10;
+    pub.publish(ctrl_cmd_msg);
+    sleep(3);//前进1s
+    ros::spinOnce();
+
+    sleep(3);
+    ctrl_cmd_msg.ctrl_cmd_steering=-10;
+    pub.publish(ctrl_cmd_msg);
+    sleep(3);//前进1s
+    ros::spinOnce(); 
+    //}
+	return 0;
+}

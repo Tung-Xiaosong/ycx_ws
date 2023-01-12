@@ -1,0 +1,6 @@
+int8 loop
+geometry_msgs/Pose[] pose_quat
+geometry_msgs/Point[] pose_yaw
+---
+bool is_successful
+

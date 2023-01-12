@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+<include file="$(find bobac2_navigation)/launch/demo_nav_2d.launch"/>
+
+<node pkg="navigation_patrol" type="navigation_patrol_ac_node" name="navigation_patrol_ac_node" output="screen" respawn="true"/>
+
+<rosparam file="$(find navigation_patrol)/param/patrol_path.yaml" command="load"/><!--别忘记装载param!!!!!!!!!-->
+
+</launch>
